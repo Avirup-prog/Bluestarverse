@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Bluestar — Poet & Storyteller</title>
+  <meta name="description" content="A personal space for poems, stories, and quiet thoughts by Bluestar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&family=Noto+Sans+Devanagari:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-star">&#10022;</div>
+      <div class="loader-name">Bluestar</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+  </div>
+
+  <div id="cursor"></div>
+  <div id="cursor-trail"></div>
+  <canvas id="bgCanvas"></canvas>
+
+  <nav id="nav">
+    <div class="nav-logo" onclick="showSection('home')">Bluestar<span class="nav-star"> &#10022;</span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-section="home" onclick="showSection('home')">Home</button>
+      <button class="nav-btn" data-section="works" onclick="showSection('works')">Works</button>
+      <button class="nav-btn" data-section="about" onclick="showSection('about')">About</button>
+      <button class="nav-write" onclick="showWrite()">&#10022; Write</button>
+    </div>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button onclick="showSection('home');closeMobileMenu()">Home</button>
+    <button onclick="showSection('works');closeMobileMenu()">Works</button>
+    <button onclick="showSection('about');closeMobileMenu()">About</button>
+    <button onclick="showWrite();closeMobileMenu()">&#10022; Write</button>
+  </div>
+
+  <!-- ═══ HOME ═══ -->
+  <section id="home" class="page active">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-left reveal-left">
+        <div class="eyebrow"><span class="eyebrow-line"></span>Poet &middot; Storyteller &middot; Dreamer</div>
+        <h1 class="hero-name">Blue<em>star</em></h1>
+        <p class="hero-tagline">words written in the dark.</p>
+        <p class="hero-desc">A personal space for poems, stories, and quiet thoughts &mdash; written in the hours between midnight and morning. In English, in Hindi, in whatever language feeling demands.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showSection('works')">Explore all works <span>&#8594;</span></button>
+          <button class="btn-ghost" onclick="showSection('about')">About me</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><span class="hstat-n" id="h-poems">0</span><span class="hstat-l">Poems</span></div>
+          <div class="hstat-div"></div>
+          <div class="hstat"><span class="hstat-n" id="h-stories">0</span><span class="hstat-l">Stories</span></div>
+          <div class="hstat-div"></div>
+          <div class="hstat"><span class="hstat-n">&#8734;</span><span class="hstat-l">Drafts</span></div>
+        </div>
+      </div>
+      <div class="hero-right reveal-right">
+        <div class="featured-wrap">
+          <div class="featured-card" id="featuredCard" onclick="openTonightModal()">
+            <div class="featured-glow"></div>
+            <div class="featured-label">&#10022; Today's poem</div>
+            <div class="featured-title" id="featuredTitle">Loading...</div>
+            <div class="featured-poem" id="featuredPoem"></div>
+            <div class="featured-footer">
+              <span class="featured-date" id="featuredDate"></span>
+              <span class="featured-read">tap to read &#8594;</span>
+            </div>
+          </div>
+          <div class="floating-pill pill-1" id="pillType">poem</div>
+          <div class="floating-pill pill-2" id="pillLang">English</div>
+        </div>
+        <div class="tonight-countdown reveal-up">
+          <span class="countdown-label">New poem at 6 PM IST in</span>
+          <span class="countdown-time" id="countdownTime">--:--:--</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONSTELLATION MAP -->
+    <div class="constellation-section">
+      <div class="constellation-header reveal-up">
+        <div>
+          <h2 class="section-title">The constellation</h2>
+          <p class="constellation-sub">Every work is a star. Hover to preview, tap to read.</p>
+        </div>
+        <div class="const-legend">
+          <div class="const-leg-item"><div class="const-leg-dot" style="background:#82bcff"></div><span>Poems</span></div>
+          <div class="const-leg-item"><div class="const-leg-dot" style="background:#a78bfa"></div><span>Stories</span></div>
+          <div class="const-leg-item"><div class="const-leg-dot" style="background:#f472b6"></div><span>Hindi</span></div>
+        </div>
+      </div>
+      <div class="const-canvas-wrap reveal-up">
+        <canvas id="constCanvas"></canvas>
+        <div class="const-tooltip" id="constTooltip">
+          <div class="const-tt-tag" id="ttTag"></div>
+          <div class="const-tt-title" id="ttTitle"></div>
+          <div class="const-tt-meta" id="ttMeta"></div>
+        </div>
+      </div>
+      <div class="const-selected" id="constSelected">
+        <div class="const-sel-empty">&#10022; hover a star to preview</div>
+      </div>
+    </div>
+
+    <!-- RECENT WORKS -->
+    <div class="recent-section">
+      <div class="recent-header reveal-up">
+        <h2 class="section-title">Recent Works</h2>
+        <button class="link-btn" onclick="showSection('works')">View all &#8594;</button>
+      </div>
+      <div class="recent-strip" id="recentStrip"></div>
+    </div>
+
+  </section>
+
+  <!-- ═══ WORKS ═══ -->
+  <section id="works" class="page">
+    <div class="works-wrap">
+      <div class="works-header reveal-up">
+        <h2 class="section-title">All Works</h2>
+        <div class="filters">
+          <button class="filt active" onclick="filterWorks('all',this)">All</button>
+          <button class="filt" onclick="filterWorks('poem',this)">Poems</button>
+          <button class="filt" onclick="filterWorks('story',this)">Stories</button>
+          <button class="filt" onclick="filterWorks('blog',this)">Blog</button>
+          <button class="filt" onclick="filterWorks('hi',this)">&#2361;&#2367;&#2306;&#2342;&#2368;</button>
+        </div>
+      </div>
+      <div class="works-grid" id="worksGrid"></div>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section id="about" class="page">
+    <div class="about-wrap">
+      <div class="about-left reveal-left">
+        <div class="about-img">
+          <div class="about-img-inner"><span class="about-glyph">&#10022;</span></div>
+          <div class="about-img-border"></div>
+        </div>
+        <div class="about-tags">
+          <span class="atag">Bengaluru</span><span class="atag">Poetry</span>
+          <span class="atag">Short stories</span><span class="atag">Hindi &amp; English</span>
+          <span class="atag">Night owl</span>
+        </div>
+      </div>
+      <div class="about-right reveal-right">
+        <div class="eyebrow"><span class="eyebrow-line"></span>About me</div>
+        <h2 class="about-name">Bluestar</h2>
+        <div class="about-role">Poet &amp; Storyteller</div>
+        <p class="about-bio">I write about things that resist being named &mdash; the textures of ordinary moments, the weight of unsaid words, the places where feeling and language quietly part ways.</p>
+        <p class="about-bio">Some nights the words come easily. Other nights, the silence is the poem. I write in both English and Hindi &mdash; sometimes a feeling only fits one language.</p>
+        <p class="about-bio">Based in Bengaluru. Writing since forever. Publishing since now.</p>
+        <div class="about-stats">
+          <div class="astat"><div class="astat-n" id="a-poems">0</div><div class="astat-l">Poems</div></div>
+          <div class="astat"><div class="astat-n" id="a-stories">0</div><div class="astat-l">Stories</div></div>
+          <div class="astat"><div class="astat-n" id="a-langs">2</div><div class="astat-l">Languages</div></div>
+        </div>
+        <button class="btn-primary" onclick="showSection('works')" style="margin-top:2rem;">Read my work &#8594;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ AUTH ═══ -->
+  <section id="auth" class="page">
+    <div class="auth-wrap">
+      <div class="auth-box reveal-up">
+        <div class="auth-star">&#10022;</div>
+        <h2 class="auth-title">Your space</h2>
+        <p class="auth-sub">Enter your password to open the writing room.</p>
+        <div class="auth-field">
+          <input type="password" id="passInput" class="auth-input" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
+            onkeydown="if(event.key==='Enter')tryLogin()" autocomplete="current-password" />
+        </div>
+        <button class="btn-primary full-width" onclick="tryLogin()">Enter &#8594;</button>
+        <p class="auth-err" id="authErr">Wrong password. Please try again.</p>
+        <button class="link-btn back-btn" onclick="showSection('home')">&#8592; Back to site</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WRITE ═══ -->
+  <section id="write" class="page">
+    <div class="write-wrap">
+      <div class="write-header reveal-up">
+        <div>
+          <h2 class="write-title">Your writing space</h2>
+          <p class="write-sub">Write freely. Publish to your site instantly.</p>
+        </div>
+        <button class="lock-btn" onclick="logout()">Lock &#10022;</button>
+      </div>
+      <div class="write-stats reveal-up">
+        <div class="wst"><div class="wst-n" id="ws-total">0</div><div class="wst-l">Total works</div></div>
+        <div class="wst"><div class="wst-n" id="ws-poems">0</div><div class="wst-l">Poems</div></div>
+        <div class="wst"><div class="wst-n" id="ws-stories">0</div><div class="wst-l">Stories</div></div>
+        <div class="wst"><div class="wst-n" id="ws-langs">2</div><div class="wst-l">Languages</div></div>
+      </div>
+      <div class="editor reveal-up">
+        <div class="editor-top">
+          <div class="editor-top-left">
+            <label class="editor-label">Type</label>
+            <select class="e-select" id="wType">
+              <option value="poem">Poem</option>
+              <option value="story">Short story</option>
+              <option value="blog">Blog</option>
+            </select>
+          </div>
+          <div class="lang-toggle">
+            <button class="ltog active" id="ltog-en" onclick="setLang('en')">English</button>
+            <button class="ltog" id="ltog-hi" onclick="setLang('hi')">&#2361;&#2367;&#2306;&#2342;&#2368;</button>
+          </div>
+        </div>
+        <div class="editor-body">
+          <label class="field-lbl">Title</label>
+          <input class="title-in" id="titleIn" placeholder="Untitled..." />
+          <label class="field-lbl" style="margin-top:1.5rem;">Content</label>
+          <textarea class="content-in en-mode" id="contentIn"
+            placeholder="Write freely...&#10;&#10;Every word belongs here."></textarea>
+        </div>
+        <div class="editor-foot">
+          <span class="wcount" id="wcount">0 words</span>
+          <button class="btn-primary" onclick="publish()">Publish &#10022;</button>
+        </div>
+      </div>
+      <div class="pub-list reveal-up">
+        <div class="pub-list-hdr">Published works</div>
+        <div id="pubList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MODAL ═══ -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal-box" id="modalBox">
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+      <div class="modal-inner">
+        <div class="modal-tag" id="mTag"></div>
+        <h2 class="modal-title" id="mTitle"></h2>
+        <div class="modal-meta" id="mMeta"></div>
+        <div class="modal-divider"></div>
+        <div class="modal-content" id="mContent"></div>
+        <div class="modal-actions">
+          <button class="modal-like-btn" id="modalLikeBtn" onclick="toggleLike()">
+            <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span id="likeCount">0</span>
+          </button>
+          <button class="modal-share-btn" onclick="shareWork()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+            Share
+          </button>
+        </div>
+        <!-- LEAVE A NOTE -->
+        <div class="note-section">
+          <div class="note-section-title">Leave a note</div>
+          <div class="note-input-wrap">
+            <textarea class="note-input" id="noteInput" placeholder="this one stayed with me..." maxlength="80" oninput="updateNoteCount()"></textarea>
+            <div class="note-input-row">
+              <span class="note-charcount" id="noteCount">80 left</span>
+              <button class="note-send-btn" onclick="sendNote()">Send &#8594;</button>
+            </div>
+          </div>
+          <div class="notes-list" id="notesList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARE SHEET -->
+  <div class="share-sheet-bg" id="shareSheetBg" onclick="closeShareSheet()">
+    <div class="share-sheet" onclick="event.stopPropagation()">
+      <div class="share-sheet-title">Share this poem</div>
+      <div class="share-sheet-links" id="shareLinks"></div>
+      <button class="share-copy-btn" id="shareCopyBtn" onclick="copyLink()">Copy link</button>
+      <button class="share-cancel" onclick="closeShareSheet()">Cancel</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <footer id="site-footer">
+    <div class="footer-inner">
+      <span class="footer-logo">Bluestar <span class="footer-star">&#10022;</span></span>
+      <a class="footer-ig" href="https://instagram.com/yourusername" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4.5"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+        </svg>
+        @yourusername
+      </a>
+      <span class="footer-copy">crafted with words &amp; starlight</span>
+    </div>
+  </footer>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+  <!-- Config: fill in your keys in js/config.js -->
+  <script src="js/config.js"></script>
+  <!-- Seed data (starter poems) -->
+  <script src="js/data.js"></script>
+  <!-- Database layer -->
+  <script src="js/supabase-db.js"></script>
+  <!-- Main app -->
+  <script src="js/app.js"></script>
+</body>
+</html>
